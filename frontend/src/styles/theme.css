@@ -1,0 +1,89 @@
+/* ========== Light Book 主题变量 ========== */
+:root {
+  /* 主色调 - 暖棕/琥珀 */
+  --lb-primary: #8B5E3C;
+  --lb-primary-light: #D4A574;
+  --lb-primary-dark: #6B4226;
+  --lb-accent: #E8B86D;
+
+  /* 功能色 */
+  --lb-success: #52C41A;
+  --lb-warning: #FAAD14;
+  --lb-danger: #FF4D4F;
+  --lb-info: #1890FF;
+
+  /* 中性色 */
+  --lb-text: #2C2C2C;
+  --lb-text-secondary: #666666;
+  --lb-text-light: #999999;
+  --lb-bg: #F7F4F0;
+  --lb-bg-card: #FFFFFF;
+  --lb-border: #EDE8E3;
+
+  /* 阴影 */
+  --lb-shadow-sm: 0 2px 8px rgba(139, 94, 60, 0.08);
+  --lb-shadow-md: 0 4px 16px rgba(139, 94, 60, 0.12);
+  --lb-shadow-lg: 0 8px 32px rgba(139, 94, 60, 0.16);
+
+  /* 圆角 */
+  --lb-radius-sm: 8px;
+  --lb-radius-md: 12px;
+  --lb-radius-lg: 16px;
+  --lb-radius-xl: 24px;
+
+  /* 间距 */
+  --lb-page-padding: 16px;
+}
+
+/* ========== Element Plus 全局覆盖 ========== */
+:root {
+  --el-color-primary: #8B5E3C;
+  --el-color-primary-light-3: #A67B5B;
+  --el-color-primary-light-5: #C4A882;
+  --el-color-primary-light-7: #D4C0A8;
+  --el-color-primary-light-8: #E3D6C8;
+  --el-color-primary-light-9: #F0EAE2;
+  --el-color-primary-dark-2: #6B4226;
+  --el-color-success: #67C23A;
+  --el-color-warning: #E6A23C;
+  --el-color-danger: #F56C6C;
+  --el-color-info: #909399;
+  --el-border-radius-base: 8px;
+  --el-border-radius-small: 6px;
+  --el-border-radius-round: 20px;
+  --el-font-size-base: 14px;
+  --el-border-color: #EDE8E3;
+  --el-border-color-light: #F0EBE5;
+  --el-fill-color-blank: #FFFFFF;
+  --el-bg-color: #F7F4F0;
+  --el-text-color-primary: #2C2C2C;
+  --el-text-color-regular: #666666;
+  --el-text-color-secondary: #999999;
+}
+
+/* ========== Vant 全局覆盖 ========== */
+:root:root {
+  --van-primary-color: #8B5E3C;
+  --van-primary-color-light: #D4A57433;
+  --van-text-color: #2C2C2C;
+  --van-text-color-2: #666666;
+  --van-text-color-3: #999999;
+  --van-background: #F7F4F0;
+  --van-background-2: #FFFFFF;
+  --van-border-color: #EDE8E3;
+  --van-active-color: #6B4226;
+  --van-nav-bar-icon-color: #2C2C2C;
+  --van-nav-bar-text-color: #2C2C2C;
+  --van-nav-bar-title-text-color: #2C2C2C;
+  --van-nav-bar-background: #FFFFFF;
+  --van-tabbar-item-active-color: #8B5E3C;
+  --van-search-content-background: #F0EBE5;
+  --van-tabs-bottom-bar-color: #8B5E3C;
+  --van-button-primary-background: #8B5E3C;
+  --van-button-primary-border-color: #8B5E3C;
+  --van-tab-active-text-color: #8B5E3C;
+  --van-tab-bottom-bar-color: #8B5E3C;
+  --van-switch-on-background: #8B5E3C;
+  --van-checkbox-checked-icon-color: #8B5E3C;
+  --van-radio-checked-icon-color: #8B5E3C;
+}
