@@ -1,18 +1,21 @@
 <template>
   <el-container class="desktop-layout">
-    <!-- 侧边导航 -->
-    <el-aside width="200px" class="desktop-aside">
-      <div class="logo" @click="goHome">
+    <!-- 顶部导航 -->
+    <el-header class="desktop-header" height="64px">
+      <div class="header-left" @click="goHome">
         <span class="logo-icon">📖</span>
         <span class="logo-text">Light Book</span>
       </div>
+
       <el-menu
         :default-active="activeMenu"
         router
-        background-color="#1a1a2e"
-        text-color="#a0a0b8"
-        active-text-color="#D4A574"
-        class="side-menu"
+        mode="horizontal"
+        :ellipsis="false"
+        background-color="transparent"
+        text-color="#5c5c6e"
+        active-text-color="#8B5E3C"
+        class="nav-menu"
       >
         <el-menu-item index="/home">
           <el-icon><HomeFilled /></el-icon>
@@ -35,54 +38,61 @@
           <el-icon><List /></el-icon>
           <span>订单</span>
         </el-menu-item>
-        <el-menu-item index="/user">
-          <el-icon><User /></el-icon>
-          <span>我的</span>
-        </el-menu-item>
       </el-menu>
 
-      <div class="side-footer">
-        <el-button text class="admin-link" @click="goAdmin">
-          <el-icon><Setting /></el-icon>后台管理
-        </el-button>
+      <div class="header-right">
+        <!-- 搜索框 -->
+        <div class="search-container">
+          <div 
+            class="search-box"
+            :class="{ expanded: isSearchExpanded }"
+            @click="handleSearchClick"
+          >
+            <el-icon class="search-icon"><Search /></el-icon>
+            <input
+              v-model="searchKeyword"
+              type="text"
+              class="search-input"
+              :placeholder="searchPlaceholder"
+              :focused="isSearchExpanded"
+            />
+            <div 
+              v-if="searchKeyword.trim()" 
+              class="search-button"
+              @click.stop="handleSearchSubmit"
+            >
+              <el-icon><ArrowRight /></el-icon>
+            </div>
+          </div>
+        </div>
+        <el-avatar :size="36" :src="userAvatar" class="user-avatar" @click="goUser" />
       </div>
-    </el-aside>
+    </el-header>
 
     <!-- 主内容 -->
-    <el-container class="desktop-main">
-      <!-- 顶部搜索栏 -->
-      <el-header class="desktop-header" height="60px">
-        <div class="header-search" @click="goSearch">
-          <el-icon size="18"><Search /></el-icon>
-          <span>搜索书名、作者、ISBN</span>
-        </div>
-        <div class="header-user" @click="goUser">
-          <el-avatar :size="32" :src="userAvatar" />
-        </div>
-      </el-header>
-
-      <!-- 路由页面 -->
-      <el-main class="desktop-content">
-        <router-view />
-      </el-main>
-    </el-container>
+    <el-main class="desktop-content">
+      <router-view />
+    </el-main>
   </el-container>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useCartStore } from '../stores/cart'
 import { useUserStore } from '../stores/user'
 import {
   HomeFilled, Grid, Notebook, ShoppingCart,
-  List, User, Setting, Search
+  List, User, Search, ArrowRight
 } from '@element-plus/icons-vue'
 
 const route = useRoute()
 const router = useRouter()
 const cartStore = useCartStore()
 const userStore = useUserStore()
+
+const isSearchExpanded = ref(false)
+const searchKeyword = ref('')
 
 const activeMenu = computed(() => {
   const path = route.path
@@ -95,73 +105,41 @@ const userAvatar = computed(() =>
   userStore.user.avatar || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIxNiIgY3k9IjE2IiByPSIxNiIgZmlsbD0iI0Q0QTU3NCIvPjxjaXJjbGUgY3g9IjE2IiBjeT0iMTIiIHI9IjUiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNNCAyNmMwLTcgNS0xMiAxMi0xMnMxMiA1IDEyIDEyIiBmaWxsPSIjZmZmIi8+PC9zdmc+'
 )
 
+const searchPlaceholder = computed(() => {
+  return isSearchExpanded.value ? '输入书名/作者' : ''
+})
+
 const goHome = () => router.push('/home')
-const goSearch = () => router.push({ name: 'category', query: { search: true } })
 const goUser = () => router.push('/user')
-const goAdmin = () => router.push('/admin')
+
+const handleSearchClick = (e) => {
+  e.stopPropagation()
+  isSearchExpanded.value = true
+}
+
+const handleSearchSubmit = () => {
+  console.log('搜索关键词:', searchKeyword.value)
+}
+
+const handleClickOutside = (e) => {
+  if (isSearchExpanded.value && !e.target.closest('.search-box') && !searchKeyword.value.trim()) {
+    isSearchExpanded.value = false
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside)
+})
 </script>
 
 <style scoped>
 .desktop-layout {
-  height: 100vh;
-  overflow: hidden;
-}
-
-.desktop-aside {
-  background: #1a1a2e;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 20px 16px;
-  cursor: pointer;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.logo-icon {
-  font-size: 24px;
-}
-
-.logo-text {
-  font-size: 18px;
-  font-weight: 700;
-  color: #D4A574;
-  letter-spacing: 1px;
-}
-
-.side-menu {
-  flex: 1;
-  border-right: none;
-  padding-top: 8px;
-}
-
-.cart-badge {
-  margin-left: 8px;
-}
-
-.side-footer {
-  padding: 12px;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.admin-link {
-  color: #a0a0b8 !important;
-  width: 100%;
-  justify-content: flex-start;
-}
-
-.admin-link:hover {
-  color: #D4A574 !important;
-}
-
-.desktop-main {
+  min-height: 100vh;
   background: var(--lb-bg);
-  overflow: hidden;
 }
 
 .desktop-header {
@@ -170,33 +148,157 @@ const goAdmin = () => router.push('/admin')
   justify-content: space-between;
   background: #fff;
   border-bottom: 1px solid var(--lb-border);
-  padding: 0 32px;
+  padding: 0 40px;
+  box-shadow: 0 2px 8px rgba(139, 94, 60, 0.04);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
-.header-search {
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.logo-icon {
+  font-size: 28px;
+}
+
+.logo-text {
+  font-size: 20px;
+  font-weight: 700;
+  color: #8B5E3C;
+  letter-spacing: 1px;
+}
+
+.nav-menu {
+  border-bottom: none;
+  flex: 1;
+  justify-content: center;
+}
+
+.nav-menu :deep(.el-menu-item) {
+  height: 64px;
+  line-height: 64px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.nav-menu :deep(.el-menu-item:hover) {
+  color: #8B5E3C;
+  background: rgba(139, 94, 60, 0.05);
+}
+
+.cart-badge {
+  margin-left: 4px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* 搜索框容器 */
+.search-container {
+  position: relative;
+}
+
+/* 搜索框 */
+.search-box {
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 8px 16px;
   background: var(--lb-bg);
-  border-radius: 20px;
+  border-radius: 24px;
   cursor: pointer;
   color: var(--lb-text-light);
   font-size: 14px;
-  width: 360px;
-  transition: all 0.2s;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 120px;
+  border: 2px solid transparent;
 }
 
-.header-search:hover {
-  background: #ede8e3;
+.search-box.expanded {
+  width: 300px;
+  background: #fff;
+  border-color: #8B5E3C;
+  box-shadow: 0 4px 20px rgba(139, 94, 60, 0.15);
 }
 
-.header-user {
+.search-icon {
+  font-size: 16px;
+  color: var(--lb-text-light);
+  transition: color 0.3s;
+}
+
+.search-box.expanded .search-icon {
+  color: #8B5E3C;
+}
+
+.search-input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 14px;
+  color: var(--lb-text);
+  width: 0;
+  opacity: 0;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.search-box.expanded .search-input {
+  width: calc(100% - 60px);
+  opacity: 1;
+}
+
+.search-input::placeholder {
+  color: rgba(139, 94, 60, 0.5);
+}
+
+/* 搜索按钮 */
+.search-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #8B5E3C, #D4A574);
+  color: #fff;
   cursor: pointer;
+  transition: all 0.2s;
+  opacity: 0;
+  transform: translateX(10px);
+  animation: fadeInRight 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes fadeInRight {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.search-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(139, 94, 60, 0.3);
+}
+
+.search-button :deep(.el-icon) {
+  font-size: 14px;
+}
+
+.user-avatar {
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .desktop-content {
-  overflow-y: auto;
-  padding: 24px 32px;
+  padding: 0;
+  width: 100%;
 }
 </style>
