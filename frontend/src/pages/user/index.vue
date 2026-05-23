@@ -124,7 +124,7 @@ const handleLogout = () => {
 .user-header { position: relative; padding: 40px 20px 24px; overflow: hidden; }
 .header-bg { position: absolute; inset: 0; background: linear-gradient(135deg, var(--lb-primary) 0%, var(--lb-primary-dark) 100%); }
 
-.user-profile { position: relative; display: flex; align-items: center; gap: 16px; max-width: 768px; margin: 0 auto; }
+.user-profile { position: relative; display: flex; align-items: center; gap: 16px; }
 
 .avatar-wrap {
   width: 72px; height: 72px; border-radius: 50%; overflow: hidden;

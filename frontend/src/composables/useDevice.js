@@ -34,7 +34,7 @@ export function useDevice() {
 
   return {
     isMobile,
-    isDesktop: ref(() => !isMobile.value),
+    isDesktop: computed(() => !isMobile.value),
     screenWidth
   }
 }
