@@ -59,6 +59,29 @@
           </router-link>
         </div>
       </div>
+
+      <div class="admin-demo-section">
+        <div class="admin-demo-title">🔑 演示账户</div>
+        <div class="admin-demo-card">
+          <div class="admin-demo-info">
+            <div class="admin-demo-name">
+              <el-icon><User /></el-icon>
+              超级管理员
+            </div>
+            <div class="admin-demo-detail">
+              <span class="admin-detail-label">账号</span>
+              <span class="admin-detail-value">{{ demoAccount.username }}</span>
+            </div>
+            <div class="admin-demo-detail">
+              <span class="admin-detail-label">密码</span>
+              <span class="admin-detail-value">{{ demoAccount.password }}</span>
+            </div>
+          </div>
+          <el-button size="small" class="admin-fill-btn" @click="fillAccount">
+            一键填入
+          </el-button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -73,6 +96,8 @@ const router = useRouter()
 const formRef = ref()
 const loading = ref(false)
 
+const demoAccount = { username: 'admin', password: 'admin123' }
+
 const form = reactive({
   username: '',
   password: ''
@@ -81,6 +106,12 @@ const form = reactive({
 const rules = {
   username: [{ required: true, message: '请输入管理员账号', trigger: 'blur' }],
   password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
+}
+
+const fillAccount = () => {
+  form.username = demoAccount.username
+  form.password = demoAccount.password
+  ElMessage.success('已填入账户信息')
 }
 
 const handleLogin = async () => {
@@ -122,6 +153,7 @@ const handleLogin = async () => {
   justify-content: center;
   position: relative;
   overflow: hidden;
+  padding: 40px 0;
 }
 
 .admin-login-container {
@@ -248,6 +280,87 @@ const handleLogin = async () => {
   color: #334e68;
 }
 
+.admin-demo-section {
+  margin-top: 24px;
+}
+
+.admin-demo-title {
+  text-align: center;
+  font-size: 13px;
+  color: rgba(51, 78, 104, 0.6);
+  margin-bottom: 12px;
+  font-family: "STSong", "SimSun", "Songti SC", serif;
+  letter-spacing: 1px;
+}
+
+.admin-demo-card {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(99, 125, 152, 0.15);
+  border-radius: 16px;
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  box-shadow: 0 4px 16px rgba(99, 125, 152, 0.06);
+}
+
+.admin-demo-info {
+  flex: 1;
+}
+
+.admin-demo-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #334e68;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.admin-demo-detail {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.admin-detail-label {
+  font-size: 11px;
+  color: rgba(51, 78, 104, 0.5);
+  background: rgba(51, 78, 104, 0.08);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.admin-detail-value {
+  font-size: 12px;
+  color: #627d98;
+  font-family: 'Monaco', 'Menlo', monospace;
+}
+
+.admin-fill-btn {
+  flex-shrink: 0;
+  background: linear-gradient(135deg, rgba(51, 78, 104, 0.15) 0%, rgba(31, 41, 55, 0.2) 100%);
+  border: 1px solid rgba(51, 78, 104, 0.2);
+  color: #334e68;
+  border-radius: 10px;
+  padding: 0 18px;
+  height: 38px;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.admin-fill-btn:hover {
+  background: linear-gradient(135deg, #334e68 0%, #1f2937 100%);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(51, 78, 104, 0.2);
+}
+
 @media (max-width: 480px) {
   .admin-login-card {
     padding: 32px 20px;
@@ -259,6 +372,14 @@ const handleLogin = async () => {
   
   .admin-logo {
     font-size: 48px;
+  }
+  
+  .admin-demo-card {
+    padding: 14px 16px;
+  }
+  
+  .admin-demo-detail {
+    flex-wrap: wrap;
   }
 }
 </style>
