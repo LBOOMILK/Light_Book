@@ -79,10 +79,10 @@
 <script setup>
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { showToast } from 'vant'
 import { login } from '../../api'
 import { useUserStore } from '../../stores/user'
 import FloatingBackground from '../../components/common/FloatingBackground.vue'
+import message from '../../utils/message'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -128,10 +128,10 @@ const handleSubmit = async () => {
     const data = await login(form)
     userStore.setToken(data.token)
     userStore.setUser(data.user)
-    showToast({ message: '登录成功', type: 'success' })
+    message.success('登录成功')
     router.push({ name: 'user' })
   } catch (e) {
-    showToast({ message: '登录失败', type: 'error' })
+    message.error(e.message || '登录失败')
   }
 }
 </script>

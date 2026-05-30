@@ -5,6 +5,18 @@ import {
 } from '../mock'
 
 /**
+ * 本地 Mock 数据 — 后端接好后删除此文件即可
+ */
+export const mockUsers = [
+  { id: 1, username: '张三', phone: '13800000001', password: '123456', points: 260, purchased_ebooks: [] },
+  { id: 2, username: '李四', phone: '13800000002', password: '123456', points: 180, purchased_ebooks: [1, 2] }
+]
+
+export const mockAdmins = [
+  { id: 1, username: 'admin', password: 'admin123', role: 'superadmin' }
+]
+
+/**
  * 包装请求，失败时降级到 mock 数据
  */
 function withMock(apiFn, mockData, transform) {
@@ -20,7 +32,24 @@ function withMock(apiFn, mockData, transform) {
 }
 
 // ========== 用户 ==========
-export const login = (data) => request.post('/users/login', data)
+export const login = (data) => {
+  const user = mockUsers.find(u => u.phone === data.phone && u.password === data.password)
+  if (user) {
+    return Promise.resolve({
+      token: 'mock_user_token_' + user.id,
+      user: {
+        id: user.id,
+        username: user.username,
+        phone: user.phone,
+        points: user.points,
+        purchased_ebooks: user.purchased_ebooks
+      }
+    })
+  }
+  return request.post('/users/login', data).catch(() => {
+    throw new Error('手机号或密码错误')
+  })
+}
 export const register = (data) => request.post('/users/register', data)
 export const getUserProfile = withMock(() => request.get('/users/profile'), mockUser)
 export const updateUserProfile = (data) => request.put('/users/profile', data)
