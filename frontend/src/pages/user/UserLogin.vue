@@ -47,6 +47,31 @@
           <span class="link">忘记密码？</span>
         </div>
       </div>
+
+      <div class="demo-section">
+        <div class="demo-title">🗝️ 演示账户</div>
+        <div class="demo-cards">
+          <div class="demo-card" v-for="(account, index) in demoAccounts" :key="index">
+            <div class="demo-info">
+              <div class="demo-name">
+                <van-icon name="user-o" />
+                {{ account.username }}
+              </div>
+              <div class="demo-detail">
+                <span class="detail-label">账号</span>
+                <span class="detail-value">{{ account.phone }}</span>
+              </div>
+              <div class="demo-detail">
+                <span class="detail-label">密码</span>
+                <span class="detail-value">{{ account.password }}</span>
+              </div>
+            </div>
+            <van-button size="small" class="fill-btn" @click="fillAccount(account)">
+              一键填入
+            </van-button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -61,6 +86,11 @@ import FloatingBackground from '../../components/common/FloatingBackground.vue'
 
 const router = useRouter()
 const userStore = useUserStore()
+
+const demoAccounts = [
+  { username: '张三', phone: '13800000001', password: '123456' },
+  { username: '李四', phone: '13800000002', password: '123456' }
+]
 
 const form = reactive({
   phone: '',
@@ -87,6 +117,12 @@ const handleSecretClick = () => {
   }
 }
 
+const fillAccount = (account) => {
+  form.phone = account.phone
+  form.password = account.password
+  showToast({ message: '已填入账户信息', type: 'success' })
+}
+
 const handleSubmit = async () => {
   try {
     const data = await login(form)
@@ -109,6 +145,7 @@ const handleSubmit = async () => {
   justify-content: center;
   position: relative;
   overflow: hidden;
+  padding: 40px 0;
 }
 
 .login-container {
@@ -277,6 +314,93 @@ const handleSubmit = async () => {
   color: rgba(139, 94, 60, 0.3);
 }
 
+.demo-section {
+  margin-top: 24px;
+}
+
+.demo-title {
+  text-align: center;
+  font-size: 13px;
+  color: rgba(90, 60, 44, 0.6);
+  margin-bottom: 12px;
+  font-family: "STSong", "SimSun", "Songti SC", serif;
+  letter-spacing: 1px;
+}
+
+.demo-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.demo-card {
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(139, 94, 60, 0.1);
+  border-radius: 16px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  box-shadow: 0 4px 16px rgba(139, 94, 60, 0.05);
+}
+
+.demo-info {
+  flex: 1;
+}
+
+.demo-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #5a3c2c;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.demo-detail {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.detail-label {
+  font-size: 11px;
+  color: rgba(90, 60, 44, 0.5);
+  background: rgba(139, 94, 60, 0.08);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.detail-value {
+  font-size: 12px;
+  color: #8b6a4a;
+  font-family: 'Monaco', 'Menlo', monospace;
+}
+
+.fill-btn {
+  flex-shrink: 0;
+  background: linear-gradient(135deg, rgba(139, 94, 60, 0.15) 0%, rgba(107, 68, 40, 0.2) 100%);
+  border: 1px solid rgba(139, 94, 60, 0.2);
+  color: #8b6a4a;
+  border-radius: 10px;
+  padding: 0 16px;
+  height: 36px;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.fill-btn:hover {
+  background: linear-gradient(135deg, #8B5E3C 0%, #6B4428 100%);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(139, 94, 60, 0.2);
+}
+
 @media (max-width: 480px) {
   .login-container {
     padding: 0 16px;
@@ -292,6 +416,14 @@ const handleSubmit = async () => {
   
   .brand-icon {
     font-size: 48px;
+  }
+  
+  .demo-card {
+    padding: 12px 14px;
+  }
+  
+  .demo-detail {
+    flex-wrap: wrap;
   }
 }
 </style>
